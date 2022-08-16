@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   MenuItem,
@@ -18,6 +19,17 @@ const templateOptions = [
   {
     value: 'template2',
     label: 'Template 2',
+  },
+];
+
+const users = [
+  {
+    value: 'user1',
+    label: 'User 1',
+  },
+  {
+    value: 'user2',
+    label: 'User 2',
   },
 ];
 
@@ -55,6 +67,13 @@ const CreateNewModal: React.FC = () => {
               <MenuItem key={value} value={value}>{label}</MenuItem>
             ))}
           </Select>
+
+          <Autocomplete
+            options={users}
+            renderInput={(params) => (
+              <TextField {...params} label="Assign to" margin="dense" variant="filled" />
+            )}
+          />
 
           <Modal.Actions>
             {({ handleClose }) => (

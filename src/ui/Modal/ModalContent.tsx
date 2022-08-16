@@ -1,6 +1,5 @@
 import { Dialog, DialogContent } from '@mui/material';
 import { useModalContext } from 'context/ModalContext';
-import { createPortal } from 'react-dom';
 
 type ModalContentProps = Omit<React.ComponentProps<typeof Dialog>, 'open'>;
 
@@ -11,7 +10,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ children, ...props }) => {
     setOpen(false);
   };
 
-  return createPortal(
+  return (
     <Dialog
       open={isOpen}
       onClose={handleClose}
@@ -20,8 +19,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ children, ...props }) => {
       <DialogContent>
         {children}
       </DialogContent>
-    </Dialog>,
-    document.body,
+    </Dialog>
   );
 };
 

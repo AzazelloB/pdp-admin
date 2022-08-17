@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 
 import Modal from 'ui/Modal';
+import { Input } from './Form';
 
 const templateOptions = [
   {
@@ -47,10 +48,10 @@ const CreateNewModal: React.FC = () => {
       </Modal.Button>
 
       <Modal.Content>
-        <>
-          <TextField fullWidth label="Title" margin="dense" variant="filled" />
+        <Box display="grid" gridTemplateColumns="1fr 2fr">
+          <Input name="title" variant="filled" fullWidth label="Title" margin="dense" />
 
-          <TextField fullWidth label="Description" margin="dense" variant="filled" />
+          <Input name="description" variant="filled" fullWidth label="Description" margin="dense" />
 
           <Select
             fullWidth
@@ -84,7 +85,7 @@ const CreateNewModal: React.FC = () => {
               </Box>
             )}
           </Modal.Actions>
-        </>
+        </Box>
       </Modal.Content>
     </Modal>
   );

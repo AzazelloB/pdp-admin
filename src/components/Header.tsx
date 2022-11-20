@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 import { useUser } from 'hooks/useUser';
-import { logout, signInWithGoogle } from 'utils/auth';
+import { logout, signInWithGooglePopup } from 'utils/auth';
 
 const Header: React.FC = () => {
   const user = useUser();
@@ -87,7 +87,7 @@ const Header: React.FC = () => {
             </Menu>
           </>
         ) : (
-          <Button color="inherit" onClick={signInWithGoogle}>Sign-In</Button>
+          <Button color="inherit" onClick={signInWithGooglePopup}>Sign-In</Button>
         )}
       </Container>
     </AppBar>

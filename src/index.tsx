@@ -14,7 +14,7 @@ root.render(
     <CssBaseline enableColorScheme />
     <OneTapLogin />
 
-    <BrowserRouter>
+    <BrowserRouter basename="/pdp-admin">
       <ThemeProvider theme={createTheme()}>
         <App />
       </ThemeProvider>

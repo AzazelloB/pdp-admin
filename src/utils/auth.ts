@@ -12,10 +12,10 @@ import { app } from './app';
 
 export const auth = getAuth(app);
 
-const googleProvider = new GoogleAuthProvider();
-
 export const signInWithGooglePopup = async () => {
   try {
+    const googleProvider = new GoogleAuthProvider();
+
     await signInWithPopup(auth, googleProvider);
   } catch (err) {
     console.error(err);

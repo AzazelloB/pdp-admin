@@ -56,17 +56,47 @@ const Header: React.FC = () => {
           }}
           />
           <Typography>Header</Typography>
+
+          <Box sx={{
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' },
+            ml: 4,
+          }}
+          >
+            <Button
+              href="/"
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Home
+            </Button>
+
+            <Button
+              href="/pdp"
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Forms
+            </Button>
+
+            <Button
+              href="/users"
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Users
+            </Button>
+          </Box>
         </Box>
 
         {user ? (
           <>
-            <IconButton
-              size="small"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <Avatar src={user.photoURL || undefined} />
-            </IconButton>
+            <Box display="flex" alignItems="center">
+              <IconButton
+                size="small"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <Avatar src={user.photoURL || undefined} />
+              </IconButton>
+            </Box>
 
             <Menu
               anchorEl={anchorEl}

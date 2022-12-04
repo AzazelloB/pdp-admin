@@ -1,7 +1,9 @@
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+
+import theme from 'ui/theme';
 
 import App from 'components/App';
 import OneTapLogin from 'components/OneTapLogin';
@@ -15,7 +17,7 @@ root.render(
     <OneTapLogin />
 
     <BrowserRouter basename="/pdp-admin">
-      <ThemeProvider theme={createTheme()}>
+      <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
     </BrowserRouter>

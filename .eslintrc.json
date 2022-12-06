@@ -13,7 +13,10 @@
     "airbnb",
     "plugin:@typescript-eslint/recommended"
   ],
-  "ignorePatterns": ["src/api/**/types/*.ts"],
+  "ignorePatterns": [
+    "src/api/**/types/*.ts",
+    "functions/**/*"
+  ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

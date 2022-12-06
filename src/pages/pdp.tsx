@@ -17,8 +17,8 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import CreateNewModal from 'components/CreateNewModal';
-import Menu from 'components/Menu';
+import CreateNewModal from 'components/PDPForms/CreateNewModal';
+import Menu from 'components/PDPForms/Menu';
 
 interface Card {
   id: number;

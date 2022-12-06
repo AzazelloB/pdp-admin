@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import CreateNewModal from 'components/Users/CreateNewModal';
 
 interface User {
   email: string;
@@ -21,15 +22,15 @@ const users: User[] = [
     role: 'zxc',
   },
   {
-    email: 'zxc',
+    email: 'zxc1',
     role: 'zxc',
   },
   {
-    email: 'zxc',
+    email: 'zxc2',
     role: 'zxc',
   },
   {
-    email: 'zxc',
+    email: 'zxc3',
     role: 'zxc',
   },
 ];
@@ -38,7 +39,7 @@ const UsersPage: React.FC = () => {
   return (
     <>
       <Box display="flex" justifyContent="flex-end">
-        {/* <CreateNewModal /> */}
+        <CreateNewModal />
       </Box>
 
       <Container maxWidth="sm">

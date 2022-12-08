@@ -69,3 +69,36 @@ export const addUserRole = functions
         }
     );
 
+export const registerUser = functions
+    .region("europe-west2").https.onCall(
+        async (data, context) => {
+          if (context.auth?.token.role) {
+            return;
+          }
+
+          const email = data.email;
+          let role = "employee";
+
+          try {
+            const docs = await db
+                .collection("userRole")
+                .where("email", "==", email)
+                .get();
+
+            if (docs.docs[0]?.id) {
+              role = docs.docs[0].get("role");
+
+              db.collection("userRole").doc(docs.docs[0].id).delete();
+            }
+          } catch {
+            // do nothing
+          }
+
+          const user = await getAuth().getUserByEmail(email);
+
+          await getAuth().setCustomUserClaims(user.uid, {
+            role,
+          });
+        }
+    );
+

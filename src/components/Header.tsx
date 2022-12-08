@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Container,
@@ -7,17 +7,28 @@ import {
   Button,
   MenuItem,
   Menu,
-  IconButton,
   Avatar,
+  ListItem,
+  List,
 } from '@mui/material';
 
 import { useUser } from 'hooks/useUser';
 import { logout, signInWithGooglePopup } from 'utils/auth';
+import { ROLES } from 'constants/roles';
 
 const Header: React.FC = () => {
   const user = useUser();
 
+  const [userRole, setUserRole] = useState<ROLES | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      user.getIdTokenResult().then((token) => {
+        setUserRole(token.claims.role);
+      });
+    }
+  }, [user]);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,13 +100,26 @@ const Header: React.FC = () => {
         {user ? (
           <>
             <Box display="flex" alignItems="center">
-              <IconButton
-                size="small"
-                onClick={handleMenu}
-                color="inherit"
+              <List
+                component="nav"
               >
-                <Avatar src={user.photoURL || undefined} />
-              </IconButton>
+                <ListItem
+                  button
+                  color="inherit"
+                  onClick={handleMenu}
+                >
+                  <Avatar src={user.photoURL || undefined} />
+
+                  <Box ml={2} display="flex" flexDirection="column">
+                    <Box>
+                      {user.displayName}
+                    </Box>
+                    <Box>
+                      {userRole}
+                    </Box>
+                  </Box>
+                </ListItem>
+              </List>
             </Box>
 
             <Menu

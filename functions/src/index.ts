@@ -1,27 +1,71 @@
 import * as functions from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
 import {getAuth} from "firebase-admin/auth";
 
 initializeApp();
+const db = getFirestore();
 
-export const getUsers = functions
+export const getUserRoleList = functions
     .region("europe-west2").https.onCall(
-        async (data) => {
-          const listUsersResult = await getAuth()
-              .listUsers(10, data?.pageToken);
+        async () => {
+          const authenticatedUsersResult = await getAuth()
+              .listUsers();
+          const userRoleListResult = await db.collection("userRole").get();
 
-          return listUsersResult.users;
+          return [
+            ...authenticatedUsersResult.users.map((user) => ({
+              email: user.email,
+              role: user.customClaims?.role,
+            })),
+            ...userRoleListResult.docs.map((doc) => ({
+              email: doc.get("email"),
+              role: doc.get("role"),
+            })),
+          ];
         }
     );
 
-export const grantUserRole = functions
+export const setUserRole = functions
     .region("europe-west2").https.onCall(
         async (data) => {
-          const user = await getAuth().getUserByEmail(data.email);
+          try {
+            const user = await getAuth().getUserByEmail(data.email);
 
-          getAuth().setCustomUserClaims(user.uid, {
+            getAuth().setCustomUserClaims(user.uid, {
+              role: data.role,
+            });
+          } catch {
+            const docs = await db
+                .collection("userRole")
+                .where("email", "==", data.email)
+                .get();
+
+            if (docs.docs[0]?.id) {
+              db.collection("userRole").doc(docs.docs[0].id).update({
+                role: data.role,
+              });
+            }
+          }
+
+          return {
+            email: data.email,
             role: data.role,
-          });
+          };
+        }
+    );
+
+export const addUserRole = functions
+    .region("europe-west2").https.onCall(
+        async (data) => {
+          await db
+              .collection("userRole")
+              .add({
+                email: data.email,
+                role: data.role,
+              });
+
+          return true;
         }
     );
 

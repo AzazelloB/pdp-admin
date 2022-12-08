@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Container,
+  MenuItem,
   Paper,
+  Select,
+  SelectChangeEvent,
   Table,
   TableBody,
   TableCell,
@@ -10,8 +13,9 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { getUsers, grantUserRole } from 'utils/functions';
+
+import { getUserRoleList, setUserRole } from 'utils/functions';
+import { ROLES } from 'constants/roles';
 
 import CreateNewModal from 'components/Users/CreateNewModal';
 
@@ -24,21 +28,26 @@ const UsersPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    (async () => {
-      const response = await getUsers();
-
-      setUsers((response.data as any[]).map((user) => ({
-        email: user.email,
-        role: user?.customClaims?.role,
-      })));
-    })();
+    fetchUsers();
   }, []);
 
-  const handleClick = (email: string) => () => {
-    grantUserRole({
+  const fetchUsers = async () => {
+    const response = await getUserRoleList();
+
+    setUsers(response.data as User[]);
+  };
+
+  const handleChange = (email: string) => async (e: SelectChangeEvent) => {
+    const role = e.target.value;
+
+    const response = await setUserRole({
       email,
-      role: 'admin',
+      role,
     });
+
+    const updatedUser = response.data as User;
+
+    setUsers((prev) => prev.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
   };
 
   return (
@@ -55,8 +64,6 @@ const UsersPage: React.FC = () => {
                 <TableCell>Email</TableCell>
 
                 <TableCell align="right">Role</TableCell>
-
-                <TableCell align="right">Grant admin</TableCell>
               </TableRow>
             </TableHead>
 
@@ -70,14 +77,16 @@ const UsersPage: React.FC = () => {
                     {user.email}
                   </TableCell>
 
-                  <TableCell align="right">{user.role}</TableCell>
-
                   <TableCell align="right">
-                    <Button
-                      onClick={handleClick(user.email)}
+                    <Select
+                      variant="standard"
+                      value={user.role}
+                      onChange={handleChange(user.email)}
                     >
-                      make admin
-                    </Button>
+                      {Object.values(ROLES).map((role) => (
+                        <MenuItem key={role} value={role}>{role}</MenuItem>
+                      ))}
+                    </Select>
                   </TableCell>
                 </TableRow>
               ))}

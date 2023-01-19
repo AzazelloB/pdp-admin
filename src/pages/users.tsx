@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   Box,
   Container,
@@ -14,43 +13,49 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { getUserRoleList, setUserRole } from 'utils/functions';
 import { ROLES } from 'constants/roles';
 
 import CreateNewModal from 'components/Users/CreateNewModal';
-
-interface User {
-  email: string;
-  role: string;
-}
+import { useSetUserRole, useUserRoleList } from 'api/user';
+import { useQueryClient } from 'react-query';
 
 const UsersPage: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const queriClient = useQueryClient();
+  const {
+    data,
+    isLoading,
+    isIdle,
+    isError,
+  } = useUserRoleList();
+  const { mutateAsync: setUserRole } = useSetUserRole();
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  if (isLoading || isIdle) {
+    return (
+      <>
+        Loading..
+      </>
+    );
+  }
 
-  const fetchUsers = async () => {
-    const response = await getUserRoleList();
-
-    const data = await response.json();
-
-    setUsers(data.result as User[]);
-  };
+  if (isError) {
+    return (
+      <>
+        Error
+      </>
+    );
+  }
 
   const handleChange = (email: string) => async (e: SelectChangeEvent) => {
     const role = e.target.value;
 
-    const response = await setUserRole({
-      email,
-      role,
+    await setUserRole({
+      data: {
+        email,
+        role,
+      },
     });
 
-    const data = await response.json();
-    const updatedUser = data.result as User;
-
-    setUsers((prev) => prev.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
+    queriClient.invalidateQueries('getUserRoleList');
   };
 
   return (
@@ -71,7 +76,7 @@ const UsersPage: React.FC = () => {
             </TableHead>
 
             <TableBody>
-              {users.map((user) => (
+              {data.map((user) => (
                 <TableRow
                   key={user.email}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

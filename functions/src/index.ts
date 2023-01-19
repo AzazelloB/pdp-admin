@@ -19,7 +19,7 @@ const createRequest = (handler: Handler) => {
     cors(req, res, async () => {
       const result = await handler(req, res);
 
-      res.send({result});
+      res.send(result);
     });
   });
 };
@@ -41,7 +41,7 @@ export const getUserRoleList = createRequest(async () => {
 });
 
 export const setUserRole = createRequest(async (req) => {
-  const data = JSON.parse(req.body);
+  const data = req.body;
 
   try {
     const user = await getAuth().getUserByEmail(data.email);
@@ -61,13 +61,7 @@ export const setUserRole = createRequest(async (req) => {
       });
     }
   }
-
-  return {
-    email: data.email,
-    role: data.role,
-  };
-}
-);
+});
 
 export const addUserRole = functions
     .region("europe-west2").https.onCall(

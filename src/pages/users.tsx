@@ -34,7 +34,9 @@ const UsersPage: React.FC = () => {
   const fetchUsers = async () => {
     const response = await getUserRoleList();
 
-    setUsers(response.data as User[]);
+    const data = await response.json();
+
+    setUsers(data.result as User[]);
   };
 
   const handleChange = (email: string) => async (e: SelectChangeEvent) => {
@@ -45,7 +47,8 @@ const UsersPage: React.FC = () => {
       role,
     });
 
-    const updatedUser = response.data as User;
+    const data = await response.json();
+    const updatedUser = data.result as User;
 
     setUsers((prev) => prev.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
   };

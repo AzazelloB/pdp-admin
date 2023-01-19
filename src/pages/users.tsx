@@ -54,7 +54,7 @@ const UsersPage: React.FC = () => {
         role,
       },
     });
-
+    // TODO getUserRoleList fetches not updated info first run after setUserRole
     queriClient.invalidateQueries('getUserRoleList');
   };
 

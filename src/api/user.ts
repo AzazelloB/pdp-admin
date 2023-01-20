@@ -27,3 +27,17 @@ export const useSetUserRole = () => {
     ({ data }) => api.post('setUserRole', data).then((response) => response.data),
   );
 };
+
+interface AddUserRole {
+  data: User
+}
+
+export const useAddUserRole = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    AddUserRole
+  >(
+    ({ data }) => api.post('addUserRole', data).then((response) => response.data),
+  );
+};

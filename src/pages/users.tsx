@@ -20,7 +20,7 @@ import { useSetUserRole, useUserRoleList } from 'api/user';
 import { useQueryClient } from 'react-query';
 
 const UsersPage: React.FC = () => {
-  const queriClient = useQueryClient();
+  const queryClient = useQueryClient();
   const {
     data,
     isLoading,
@@ -55,7 +55,7 @@ const UsersPage: React.FC = () => {
       },
     });
     // TODO getUserRoleList fetches not updated info first run after setUserRole
-    queriClient.invalidateQueries('getUserRoleList');
+    queryClient.invalidateQueries('getUserRoleList');
   };
 
   return (

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {initializeApp} from "firebase-admin/app";
 import {getFirestore} from "firebase-admin/firestore";
-import {getAuth} from "firebase-admin/auth";
+import {getAuth, UserRecord} from "firebase-admin/auth";
 import * as createCors from "cors";
 
 initializeApp();
@@ -63,50 +63,50 @@ export const setUserRole = createRequest(async (req) => {
   }
 });
 
-export const addUserRole = functions
-    .region("europe-west2").https.onCall(
-        async (data) => {
-          await db
-              .collection("userRole")
-              .add({
-                email: data.email,
-                role: data.role,
-              });
+export const addUserRole = createRequest(async (req) => {
+  const data = req.body;
 
-          return true;
-        }
-    );
+  await db
+      .collection("userRole")
+      .add({
+        email: data.email,
+        role: data.role,
+      });
 
-export const registerUser = functions
-    .region("europe-west2").https.onCall(
-        async (data, context) => {
-          if (context.auth?.token.role) {
-            return;
-          }
+  return true;
+});
 
-          const email = data.email;
-          let role = "employee";
+export const registerUser = createRequest(async (req) => {
+  const email = req.body.email;
 
-          try {
-            const docs = await db
-                .collection("userRole")
-                .where("email", "==", email)
-                .get();
+  const user = await getAuth().getUserByEmail(email);
 
-            if (docs.docs[0]?.id) {
-              role = docs.docs[0].get("role");
+  if (!user.customClaims?.role) {
+    assignRole(user);
+  }
+});
 
-              db.collection("userRole").doc(docs.docs[0].id).delete();
-            }
-          } catch {
-            // do nothing
-          }
+const assignRole = async (user: UserRecord) => {
+  let role = "employee";
 
-          const user = await getAuth().getUserByEmail(email);
+  try {
+    const docs = await db
+        .collection("userRole")
+        .where("email", "==", user.email)
+        .get();
 
-          await getAuth().setCustomUserClaims(user.uid, {
-            role,
-          });
-        }
-    );
+    if (docs.docs[0]?.id) {
+      role = docs.docs[0].get("role");
+
+      db.collection("userRole").doc(docs.docs[0].id).delete();
+    }
+  } catch {
+    // do nothing
+  }
+
+
+  await getAuth().setCustomUserClaims(user.uid, {
+    role,
+  });
+};
 

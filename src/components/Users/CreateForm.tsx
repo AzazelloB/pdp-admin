@@ -1,12 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
 import { FormikValues, Form, Formik } from 'formik';
 import {
   MenuItem, Box, Button,
 } from '@mui/material';
 
+import { useAddUserRole } from 'api/user';
 import { ROLES } from 'constants/roles';
 import { useModalContext } from 'context/ModalContext';
-import { addUserRole } from 'utils/functions';
 
 import Modal from 'ui/Modal';
 
@@ -14,18 +14,22 @@ import Input from 'components/Form/FormFields/Input';
 import Select from 'components/Form/FormFields/Select';
 
 const CreateForm: React.FC = () => {
-  const navigate = useNavigate();
   const { setOpen } = useModalContext();
+
+  const queryClient = useQueryClient();
+  const { mutateAsync: addUserRole } = useAddUserRole();
 
   const handleSubmit = async (values: FormikValues) => {
     await addUserRole({
-      email: values.email,
-      role: values.role,
+      data: {
+        email: values.email,
+        role: values.role,
+      },
     });
 
     setOpen(false);
-    // TODO invalidate query
-    navigate(0);
+    // TODO getUserRoleList fetches not updated info first run after setUserRole
+    queryClient.invalidateQueries('getUserRoleList');
   };
 
   return (

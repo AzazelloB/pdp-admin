@@ -1,7 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import theme from 'ui/theme';
@@ -29,12 +29,12 @@ root.render(
     <CssBaseline enableColorScheme />
     <OneTapLogin />
 
-    <BrowserRouter basename="/pdp-admin">
+    <HashRouter basename="/pdp-admin">
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <App />
         </QueryClientProvider>
       </ThemeProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
 );

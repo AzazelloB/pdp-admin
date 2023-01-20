@@ -1,3 +1,4 @@
+import { api } from 'api';
 import {
   GoogleAuthProvider,
   getAuth,
@@ -10,7 +11,6 @@ import {
 import type { IGoogleCallbackResponse } from 'react-google-one-tap-login/dist/types/types';
 
 import { app } from './app';
-import { registerUser } from './functions';
 
 export const auth = getAuth(app);
 
@@ -39,7 +39,7 @@ export const signInWithGoogleOneTap = async (response: IGoogleCallbackResponse) 
 };
 
 const afterLogin = async (user: User) => {
-  await registerUser({
+  await api.post('registerUser', {
     email: user.email,
   });
 

@@ -29,7 +29,7 @@ root.render(
     <CssBaseline enableColorScheme />
     <OneTapLogin />
 
-    <HashRouter basename="/pdp-admin">
+    <HashRouter>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <App />

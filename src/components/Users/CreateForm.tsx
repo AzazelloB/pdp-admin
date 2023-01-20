@@ -28,7 +28,6 @@ const CreateForm: React.FC = () => {
     });
 
     setOpen(false);
-    // TODO getUserRoleList fetches not updated info first run after setUserRole
     queryClient.invalidateQueries('getUserRoleList');
   };
 

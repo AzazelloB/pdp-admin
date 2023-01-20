@@ -104,7 +104,6 @@ const assignRole = async (user: UserRecord) => {
     // do nothing
   }
 
-
   await getAuth().setCustomUserClaims(user.uid, {
     role,
   });

@@ -2,26 +2,80 @@ import * as functions from 'firebase-functions';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth, UserRecord } from 'firebase-admin/auth';
-import * as createCors from 'cors';
+import * as cors from 'cors';
 
 initializeApp();
 const db = getFirestore();
 
-const cors = createCors({ origin: true });
+const corsHandler = cors({ origin: true });
 
 type Handler = (
   req: functions.https.Request,
-  resp: functions.Response<unknown>
+  res: functions.Response<unknown>
 ) => Promise<unknown>;
 
-const createRequest = (handler: Handler) => {
-  return functions.region('europe-west2').https.onRequest((req, res) => {
-    cors(req, res, async () => {
-      const result = await handler(req, res);
+type Middleware = (
+  req: functions.https.Request,
+  res: functions.Response<unknown>,
+  next: () => void,
+) => void;
 
-      res.send(result);
+const applyMiddleware = (
+  req: functions.https.Request,
+  res: functions.Response<unknown>,
+  middlewareList: Middleware[],
+) => {
+  if (middlewareList.length === 0) {
+    return;
+  }
+
+  const [middleware, ...rest] = middlewareList;
+
+  middleware(req, res, () => applyMiddleware(req, res, rest));
+};
+
+const createRequest = (handler: Handler, middlewareList: Middleware[] = []) => {
+  return functions.region('europe-west2').https.onRequest((req, res) => {
+    corsHandler(req, res, () => {
+      const target = async () => {
+        const result = await handler(req, res);
+
+        res.send(result);
+      };
+
+      applyMiddleware(req, res, [...middlewareList, target]);
     });
   });
+};
+
+const isAuthenticated: Middleware = async (req, res, next) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).send();
+  }
+
+  const tokenResult = await getAuth().verifyIdToken(token);
+
+  if (!tokenResult) {
+    return res.status(401).send();
+  }
+
+  res.locals = {
+    ...res.locals,
+    uid: tokenResult.uid,
+    role: tokenResult.role,
+  };
+
+  return next();
+};
+
+const isAuthorized: (role: string) => Middleware = (role) => async (req, res, next) => {
+  if (res.locals.role !== role) {
+    return res.status(403).send();
+  }
+
+  return next();
 };
 
 export const getUserRoleList = createRequest(async () => {
@@ -38,7 +92,7 @@ export const getUserRoleList = createRequest(async () => {
       role: doc.get('role'),
     })),
   ];
-});
+}, [isAuthenticated]);
 
 export const setUserRole = createRequest(async (req) => {
   const data = req.body;
@@ -61,7 +115,7 @@ export const setUserRole = createRequest(async (req) => {
       });
     }
   }
-});
+}, [isAuthenticated, isAuthorized('admin')]);
 
 export const addUserRole = createRequest(async (req) => {
   const data = req.body;
@@ -74,7 +128,7 @@ export const addUserRole = createRequest(async (req) => {
     });
 
   return true;
-});
+}, [isAuthenticated, isAuthorized('admin')]);
 
 export const registerUser = createRequest(async (req) => {
   const { email } = req.body;

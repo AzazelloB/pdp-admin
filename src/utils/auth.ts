@@ -51,3 +51,18 @@ const afterLogin = async (user: User) => {
 export const logout = () => {
   signOut(auth);
 };
+
+export const getUserToken = async () => {
+  return new Promise((resolve, reject) => {
+    const unsub = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        resolve(token);
+      } else {
+        reject();
+      }
+
+      unsub();
+    });
+  });
+};

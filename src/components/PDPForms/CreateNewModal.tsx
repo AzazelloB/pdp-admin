@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import Modal from 'ui/Modal';
 
@@ -43,7 +44,9 @@ const CreateNewModal: React.FC = () => {
   return (
     <Modal>
       <Modal.Button as={Button} variant="contained">
-        New
+        <FormattedMessage
+          defaultMessage="New"
+        />
       </Modal.Button>
 
       <Modal.Content>
@@ -79,7 +82,9 @@ const CreateNewModal: React.FC = () => {
             {({ handleClose }) => (
               <Box display="flex" justifyContent="flex-end" mt={4}>
                 <Button variant="contained" onClick={handleClose}>
-                  Save
+                  <FormattedMessage
+                    defaultMessage="Save"
+                  />
                 </Button>
               </Box>
             )}

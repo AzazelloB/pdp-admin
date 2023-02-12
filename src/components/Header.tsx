@@ -15,6 +15,7 @@ import {
 import { useUser } from 'hooks/useUser';
 import { logout, signInWithGooglePopup } from 'utils/auth';
 import { ROLES } from 'constants/roles';
+import { FormattedMessage } from 'react-intl';
 
 const Header: React.FC = () => {
   const user = useUser();
@@ -66,7 +67,7 @@ const Header: React.FC = () => {
             mr: 2,
           }}
           />
-          <Typography>Header</Typography>
+          <Typography>PDP</Typography>
 
           <Box sx={{
             flexGrow: 1,
@@ -78,21 +79,27 @@ const Header: React.FC = () => {
               href="/"
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
-              Home
+              <FormattedMessage
+                defaultMessage="Home"
+              />
             </Button>
 
             <Button
               href="/pdp"
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
-              Forms
+              <FormattedMessage
+                defaultMessage="Forms"
+              />
             </Button>
 
             <Button
               href="/users"
               sx={{ my: 2, color: 'white', display: 'block' }}
             >
-              Users
+              <FormattedMessage
+                defaultMessage="Users"
+              />
             </Button>
           </Box>
         </Box>
@@ -137,11 +144,19 @@ const Header: React.FC = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem color="inherit" onClick={handleCloseAnd(logout)}>Sign-Out</MenuItem>
+              <MenuItem color="inherit" onClick={handleCloseAnd(logout)}>
+                <FormattedMessage
+                  defaultMessage="Sign-Out"
+                />
+              </MenuItem>
             </Menu>
           </>
         ) : (
-          <Button color="inherit" onClick={signInWithGooglePopup}>Sign-In</Button>
+          <Button color="inherit" onClick={signInWithGooglePopup}>
+            <FormattedMessage
+              defaultMessage="Sign-In"
+            />
+          </Button>
         )}
       </Container>
     </AppBar>

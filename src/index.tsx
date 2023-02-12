@@ -8,6 +8,7 @@ import theme from 'ui/theme';
 
 import App from 'components/App';
 import OneTapLogin from 'components/OneTapLogin';
+import IntlWrapper from 'components/IntlWrapper';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +33,9 @@ root.render(
     <HashRouter>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <IntlWrapper>
+            <App />
+          </IntlWrapper>
         </QueryClientProvider>
       </ThemeProvider>
     </HashRouter>

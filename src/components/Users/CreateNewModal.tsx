@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import {
   Button,
 } from '@mui/material';
@@ -9,7 +10,9 @@ const CreateNewModal: React.FC = () => {
   return (
     <Modal>
       <Modal.Button as={Button} variant="contained">
-        New
+        <FormattedMessage
+          defaultMessage="New"
+        />
       </Modal.Button>
 
       <Modal.Content fullWidth>

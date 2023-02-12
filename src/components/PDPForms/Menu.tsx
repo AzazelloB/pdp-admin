@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   IconButton,
@@ -39,8 +40,16 @@ const Menu: React.FC = () => {
         onMouseDown={stopPropagation}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Create New</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Archive</MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <FormattedMessage
+            defaultMessage="Create New"
+          />
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <FormattedMessage
+            defaultMessage="Archive"
+          />
+        </MenuItem>
       </MuiMenu>
     </>
   );

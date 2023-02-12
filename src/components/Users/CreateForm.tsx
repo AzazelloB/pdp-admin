@@ -1,4 +1,5 @@
 import { useQueryClient } from 'react-query';
+import { FormattedMessage } from 'react-intl';
 import { FormikValues, Form, Formik } from 'formik';
 import {
   MenuItem, Box, Button,
@@ -59,7 +60,9 @@ const CreateForm: React.FC = () => {
         <Modal.Actions>
           <Box display="flex" justifyContent="flex-end" mt={4}>
             <Button variant="contained" type="submit">
-              Save
+              <FormattedMessage
+                defaultMessage="Save"
+              />
             </Button>
           </Box>
         </Modal.Actions>

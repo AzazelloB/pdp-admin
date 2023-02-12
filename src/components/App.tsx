@@ -2,6 +2,7 @@ import { RouteObject, useRoutes } from 'react-router-dom';
 
 import HomePage from 'pages';
 import PDPPage from 'pages/pdp';
+import PDPFormPage from 'pages/pdp/[:formId]';
 import UsersPage from 'pages/users';
 
 import Layout from './Layout';
@@ -14,7 +15,10 @@ const App = () => {
     },
     {
       path: '/pdp',
-      element: <Layout><PDPPage /></Layout>,
+      children: [
+        { index: true, element: <Layout><PDPPage /></Layout> },
+        { path: ':formId', element: <Layout><PDPFormPage /></Layout> },
+      ],
     },
     {
       path: '/users',

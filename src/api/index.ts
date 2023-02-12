@@ -1,16 +1,31 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { getUserToken } from 'utils/auth';
 
-export const createAxiosInstance = (config: Partial<AxiosRequestConfig>) => {
-  const newInstance = axios.create({
-    ...config,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    headers: {
-      'Content-Type': 'application/json',
-      ...config.headers,
-    },
+const pathParamsInterceptor = (config: AxiosRequestConfig) => {
+  if (!config.url) {
+    return config;
+  }
+
+  let formattedUrl = config.url;
+  Object.entries(config.pathParams || {}).forEach(([
+    k,
+    v,
+  ]) => {
+    formattedUrl = formattedUrl.replace(`:${k}`, encodeURIComponent(v));
   });
+
+  return {
+    ...config,
+    url: formattedUrl,
+  };
+};
+
+export const createAxiosInstance = (config: Partial<AxiosRequestConfig>) => {
+  config.headers?.setContentType('application/json');
+
+  const newInstance = axios.create(config);
+
+  newInstance.interceptors.request.use(pathParamsInterceptor);
 
   return newInstance;
 };

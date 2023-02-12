@@ -21,7 +21,7 @@ import CreateNewModal from 'components/PDPForms/CreateNewModal';
 import Menu from 'components/PDPForms/Menu';
 
 interface Card {
-  id: number;
+  id: string;
   title: string;
   description: string;
   template: string;
@@ -29,20 +29,20 @@ interface Card {
 
 const data: Card[] = [
   {
-    id: 1,
+    id: 'E3ireAN9Pbwg083Sjxm2',
     title: 'Item 1',
     template: 'template 1',
     description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit.
     Possimus nam at dicta autem aliquam, dolore adipisci explicabo natus dolor nemo.`,
   },
   {
-    id: 2,
+    id: 'E3ireAN9Pbwg083Sjxm2',
     title: 'Item 2',
     template: 'template 2',
     description: 'Lorem ipsum dolor sit amet.',
   },
   {
-    id: 3,
+    id: 'E3ireAN9Pbwg083Sjxm2',
     title: 'Item 3',
     template: 'template 3',
     description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -99,7 +99,7 @@ const PDPPage: React.FC = () => {
                 width: '100%',
               }}
               >
-                <CardActionArea component={Link} to="/">
+                <CardActionArea component={Link} to={`/pdp/${card.id}`}>
                   <CardHeader
                     title={card.title}
                     subheader={card.template}

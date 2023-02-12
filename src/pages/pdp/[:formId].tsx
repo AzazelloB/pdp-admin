@@ -1,4 +1,5 @@
 import { useUserPDPForm } from 'api/pdpForms';
+import Form from 'components/PDP/Form';
 import { useParams } from 'react-router-dom';
 
 const PDPFormPage: React.FC = () => {
@@ -31,8 +32,16 @@ const PDPFormPage: React.FC = () => {
     );
   }
 
+  const handleSubmit = () => {
+    console.log(3213);
+  };
+
   return (
-    <div>PDPFormPage</div>
+    <Form
+      template={data.template}
+      initialValues={data.values}
+      onSumbit={handleSubmit}
+    />
   );
 };
 

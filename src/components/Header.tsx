@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   AppBar,
   Container,
-  Typography,
   Box,
+  Typography,
   Button,
-  MenuItem,
-  Menu,
-  Avatar,
-  ListItem,
   List,
+  ListItem,
+  Avatar,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 
 import { useUser } from 'hooks/useUser';
 import { logout, signInWithGooglePopup } from 'utils/auth';
 import { ROLES } from 'constants/roles';
-import { FormattedMessage } from 'react-intl';
 
 const Header: React.FC = () => {
   const user = useUser();

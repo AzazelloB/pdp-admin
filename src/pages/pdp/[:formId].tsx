@@ -32,8 +32,8 @@ const PDPFormPage: React.FC = () => {
     );
   }
 
-  const handleSubmit = () => {
-    console.log(3213);
+  const handleSubmit = (values: any) => {
+    console.log(values);
   };
 
   return (

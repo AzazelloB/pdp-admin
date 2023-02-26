@@ -1,7 +1,6 @@
 import { forwardRef } from 'react';
 import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
-import { createTheme } from '@mui/material';
-import { LinkProps } from '@mui/material/Link';
+import { createTheme, LinkProps } from '@mui/material';
 
 const LinkBehavior = forwardRef<
   HTMLAnchorElement,

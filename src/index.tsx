@@ -1,14 +1,14 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { HashRouter } from 'react-router-dom';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 
 import theme from 'ui/theme';
 
 import App from 'components/App';
-import OneTapLogin from 'components/OneTapLogin';
 import IntlWrapper from 'components/IntlWrapper';
+import OneTapLogin from 'components/OneTapLogin';
 
 const queryClient = new QueryClient({
   defaultOptions: {

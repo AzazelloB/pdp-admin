@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/pdp-admin/static/js/main.bb0f2e2e.js",
+    "main.js": "/pdp-admin/static/js/main.ade69317.js",
     "index.html": "/pdp-admin/index.html",
-    "main.bb0f2e2e.js.map": "/pdp-admin/static/js/main.bb0f2e2e.js.map"
+    "main.ade69317.js.map": "/pdp-admin/static/js/main.ade69317.js.map"
   },
   "entrypoints": [
-    "static/js/main.bb0f2e2e.js"
+    "static/js/main.ade69317.js"
   ]
 }

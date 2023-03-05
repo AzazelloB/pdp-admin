@@ -10,10 +10,10 @@ const Select: React.FC<SelectProps> = ({ name, ...props }) => {
 
   return (
     <SelectUI
-      {...field}
       fullWidth
       variant="filled"
       {...props}
+      {...field}
     />
   );
 };

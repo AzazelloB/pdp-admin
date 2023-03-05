@@ -17,7 +17,10 @@ export const getPDPForms = createRequest(async (req, res) => {
     return res.status(404).send();
   }
 
-  const PDPForms = refUser.size ? refUser.docs : refMentor.docs;
+  const PDPForms = [
+    ...refUser.docs,
+    ...refMentor.docs,
+  ];
 
   return PDPForms.map((doc) => ({
     id: doc.id,

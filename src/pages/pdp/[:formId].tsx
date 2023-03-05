@@ -1,20 +1,25 @@
-import { useUserPDPForm } from 'api/pdpForms';
-import Form from 'components/PDP/Form';
 import { useParams } from 'react-router-dom';
+
+import { usePDPForm, useUpdatePDPForm } from 'api/pdpForms';
+
+import Form from 'components/PDP/Form';
+import { useQueryClient } from 'react-query';
 
 const PDPFormPage: React.FC = () => {
   const { formId } = useParams();
 
+  const queryClient = useQueryClient();
   const {
     data,
     isLoading,
     isIdle,
     isError,
-  } = useUserPDPForm({
+  } = usePDPForm({
     pathParams: {
       id: formId!,
     },
   });
+  const { mutateAsync: updatePDPForm } = useUpdatePDPForm();
 
   if (isLoading || isIdle) {
     return (
@@ -32,14 +37,20 @@ const PDPFormPage: React.FC = () => {
     );
   }
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  const handleSubmit = async (values: any) => {
+    await updatePDPForm({
+      pathParams: {
+        id: formId!,
+      },
+      data: values,
+    });
+
+    queryClient.invalidateQueries('getPDPForm');
   };
 
   return (
     <Form
-      template={data.template}
-      initialValues={data.values}
+      form={data}
       onSumbit={handleSubmit}
     />
   );

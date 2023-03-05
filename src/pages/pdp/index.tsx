@@ -17,6 +17,8 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { usePDPForms } from 'api/pdpForms';
+
 import CreateNewModal from 'components/PDPForms/CreateNewModal';
 import Menu from 'components/PDPForms/Menu';
 
@@ -26,33 +28,6 @@ interface Card {
   description: string;
   template: string;
 }
-
-const data: Card[] = [
-  {
-    id: 'E3ireAN9Pbwg083Sjxm2',
-    title: 'Item 1',
-    template: 'template 1',
-    description: `Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-    Possimus nam at dicta autem aliquam, dolore adipisci explicabo natus dolor nemo.`,
-  },
-  {
-    id: 'E3ireAN9Pbwg083Sjxm2',
-    title: 'Item 2',
-    template: 'template 2',
-    description: 'Lorem ipsum dolor sit amet.',
-  },
-  {
-    id: 'E3ireAN9Pbwg083Sjxm2',
-    title: 'Item 3',
-    template: 'template 3',
-    description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-    Dolore, magni. Deserunt magnam, consectetur accusantium vel dolor,
-    soluta id dignissimos rerum laborum ipsa saepe atque,
-    aperiam omnis officia error cumque consequatur sit explicabo quam sunt?
-    Nulla, animi ullam! Accusamus, totam perspiciatis.
-    Quasi necessitatibus quia sed corrupti, quas repellat magni. Quibusdam, illum!`,
-  },
-];
 
 const sortOptions = [
   {
@@ -67,6 +42,29 @@ const sortOptions = [
 
 const PDPPage: React.FC = () => {
   const [order, setOrder] = useState(sortOptions[0].value);
+
+  const {
+    data,
+    isLoading,
+    isIdle,
+    isError,
+  } = usePDPForms();
+
+  if (isLoading || isIdle) {
+    return (
+      <>
+        Loading..
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        Error
+      </>
+    );
+  }
 
   const handleSortChange = (e: SelectChangeEvent) => {
     setOrder(e.target.value as string);
@@ -93,24 +91,24 @@ const PDPPage: React.FC = () => {
         </Box>
 
         <List>
-          {data.map((card) => (
-            <ListItem key={card.id} disableGutters>
+          {data.map((pdpForm) => (
+            <ListItem key={pdpForm.userId} disableGutters>
               <Card sx={{
                 width: '100%',
               }}
               >
-                <CardActionArea component={Link} to={`/pdp/${card.id}`}>
+                <CardActionArea component={Link} to={`/pdp/${pdpForm.id}`}>
                   <CardHeader
-                    title={card.title}
-                    subheader={card.template}
+                    title={pdpForm.type}
+                    subheader={pdpForm.level}
                     action={<Menu />}
                   />
 
-                  <CardContent>
+                  {/* <CardContent>
                     <Typography noWrap>
-                      {card.description}
+                      {pdpForm.description}
                     </Typography>
-                  </CardContent>
+                  </CardContent> */}
                 </CardActionArea>
               </Card>
             </ListItem>
@@ -118,7 +116,7 @@ const PDPPage: React.FC = () => {
         </List>
 
         <Pagination
-          count={5}
+          count={Math.ceil(data.length / 5)}
           sx={{
             my: 2,
             display: 'flex',

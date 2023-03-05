@@ -1,11 +1,31 @@
 import { api } from 'api';
-import { useQuery } from 'react-query';
+import { AxiosError } from 'axios';
+import { useMutation, useQuery } from 'react-query';
 
-interface PDPForm {
+interface Skill {
+  name: string;
+  userEval: string;
+  supervisorEval: string;
+  notes: string[];
+}
+
+interface Category {
+  name: string;
+  skills: Skill[];
+}
+
+interface Tab {
+  name: string;
+  categories: Category[];
+}
+
+export interface PDPForm {
+  id: string;
   mentorId: string;
   userId: string;
-  template: PDPTemplate;
-  values: Record<string, unknown>;
+  type: string;
+  level: string;
+  tabs: Tab[];
 }
 
 interface useUserPDPFormVariables {
@@ -14,38 +34,33 @@ interface useUserPDPFormVariables {
   }
 }
 
-export const useUserPDPForm = ({ pathParams }: useUserPDPFormVariables) => {
+export const usePDPForm = ({ pathParams }: useUserPDPFormVariables) => {
   return useQuery<PDPForm>(
-    ['getUserPDPForm', pathParams],
-    () => api.get('getUserPDPForm/:id', { pathParams }).then((response) => response.data),
+    ['getPDPForm', pathParams],
+    () => api.get('getPDPForm/:id', { pathParams }).then((response) => response.data),
   );
 };
 
-interface Category {
-  name: string;
-  skills: string[];
-}
+export const usePDPForms = () => {
+  return useQuery<PDPForm[]>(
+    ['getPDPForms'],
+    () => api.get('getPDPForms').then((response) => response.data),
+  );
+};
 
-interface Tab {
-  name: string;
-  categories: Category[];
-}
-
-export interface PDPTemplate {
-  type: string;
-  level: string;
-  tabs: Tab[];
-}
-
-interface useUserPDPTemplateVariables {
+interface UpdatePDPForm {
+  data: PDPForm;
   pathParams: {
     id: string;
-  }
+  };
 }
 
-export const useUserPDPTemplate = ({ pathParams }: useUserPDPTemplateVariables) => {
-  return useQuery<PDPTemplate>(
-    ['getUserPDPTemplate', pathParams],
-    () => api.get('getUserPDPTemplate/:id', { pathParams }).then((response) => response.data),
+export const useUpdatePDPForm = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    UpdatePDPForm
+  >(
+    ({ data, pathParams }) => api.patch('updatePDPForm/:id', data, { pathParams }).then((response) => response.data),
   );
 };

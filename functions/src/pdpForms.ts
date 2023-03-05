@@ -2,7 +2,30 @@ import { db } from './utils/bootstrap';
 import { isAuthenticated } from './utils/guards';
 import { createRequest } from './utils/request';
 
-export const getUserPDPForm = createRequest(async (req, res) => {
+export const getPDPForms = createRequest(async (req, res) => {
+  const refUser = await db
+    .collection('PDPForms')
+    .where('userId', '==', res.locals.uid)
+    .get();
+
+  const refMentor = await db
+    .collection('PDPForms')
+    .where('mentorId', '==', res.locals.uid)
+    .get();
+
+  if (refUser.size === 0 && refMentor.size === 0) {
+    return res.status(404).send();
+  }
+
+  const PDPForms = refUser.size ? refUser.docs : refMentor.docs;
+
+  return PDPForms.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}, [isAuthenticated]);
+
+export const getPDPForm = createRequest(async (req, res) => {
   const id = req.params[0];
 
   const ref = await db
@@ -20,25 +43,30 @@ export const getUserPDPForm = createRequest(async (req, res) => {
     return res.status(403).send();
   }
 
-  const template = await PDPForm.template.get();
-
-  return {
-    ...PDPForm,
-    template: template.data(),
-  };
+  return PDPForm;
 }, [isAuthenticated]);
 
-export const getUserPDPTemplate = createRequest(async (req, res) => {
+export const updatePDPForm = createRequest(async (req, res) => {
   const id = req.params[0];
+  const data = req.body;
 
-  const ref = await db
-    .collection('formTemplates')
-    .doc(id)
-    .get();
+  const ref = db
+    .collection('PDPForms')
+    .doc(id);
 
-  if (!ref.exists) {
+  const result = await ref.get();
+
+  if (!result.exists) {
     return res.status(404).send();
   }
 
-  return ref.data()!;
+  const PDPForm = result.data()!;
+
+  if (PDPForm.userId !== res.locals.uid && PDPForm.mentorId !== res.locals.uid) {
+    return res.status(403).send();
+  }
+
+  await ref.update(data);
+
+  return data;
 }, [isAuthenticated]);

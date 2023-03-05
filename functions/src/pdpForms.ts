@@ -16,7 +16,7 @@ export const getUserPDPForm = createRequest(async (req, res) => {
 
   const PDPForm = ref.data()!;
 
-  if (PDPForm.userId !== res.locals.uid) {
+  if (PDPForm.userId !== res.locals.uid && PDPForm.mentorId !== res.locals.uid) {
     return res.status(403).send();
   }
 

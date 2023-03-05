@@ -11,7 +11,7 @@ const Menu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const stopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
+  const stopPropagation = (e: React.UIEvent) => {
     e.stopPropagation();
     e.preventDefault();
   };
@@ -21,7 +21,8 @@ const Menu: React.FC = () => {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (e: React.UIEvent) => {
+    stopPropagation(e);
     setAnchorEl(null);
   };
 

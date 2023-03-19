@@ -10,6 +10,8 @@ import VerticalTabs from 'ui/VerticalTabs';
 import Field from 'components/Form/Field';
 import Select from 'components/Form/FormFields/Select';
 
+import Notes from './Notes';
+
 interface DynamicTabProps {
   userId: string;
   tab: Tab;
@@ -105,13 +107,9 @@ const DynamicTab: React.FC<DynamicTabProps> = ({
                 )}
 
                 <div>
-                  {skill.notes.map((note) => (
-                    <div
-                      key={note}
-                    >
-                      {note}
-                    </div>
-                  ))}
+                  <Notes
+                    prefixName={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}]`}
+                  />
                 </div>
               </>
             ))}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { createContext } from 'utils/createContext';
@@ -13,6 +13,14 @@ function useTabsState({ defaultActiveTabId }: { defaultActiveTabId: string }) {
 
   const [tabs, setTabs] = useState<Tab[]>([]);
   const [activeTabId, setActiveTabId] = useState(searchParams.get('tab') || defaultActiveTabId);
+
+  useEffect(() => {
+    const currentTabId = searchParams.get('tab');
+
+    if (currentTabId) {
+      setActiveTabId(currentTabId);
+    }
+  }, [searchParams]);
 
   return {
     tabs,

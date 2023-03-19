@@ -10,10 +10,11 @@ const Field = <T extends React.ElementType>({
   as: Component,
   label,
   helperText,
+  fullWidth,
   ...props
 }: Required<Pick<AsProp<T, FieldProps>, 'as'>> & Omit<AsProp<T, FieldProps>, 'as'>) => {
   return (
-    <FormControl>
+    <FormControl fullWidth={fullWidth}>
       <InputLabel>{label}</InputLabel>
 
       <Component {...props} />

@@ -14,7 +14,7 @@ interface Category {
   skills: Skill[];
 }
 
-interface Tab {
+export interface Tab {
   name: string;
   categories: Category[];
 }
@@ -23,8 +23,14 @@ export interface PDPForm {
   id: string;
   mentorId: string;
   userId: string;
+  projectManagerIds: string[];
+  hrIds: string[];
+  from: string;
+  to: string;
+  feedback: string;
   type: string;
   level: string;
+  archived: boolean;
   tabs: Tab[];
 }
 
@@ -49,7 +55,7 @@ export const usePDPForms = () => {
 };
 
 interface UpdatePDPForm {
-  data: PDPForm;
+  data: Partial<PDPForm>;
   pathParams: {
     id: string;
   };
@@ -62,5 +68,21 @@ export const useUpdatePDPForm = () => {
     UpdatePDPForm
   >(
     ({ data, pathParams }) => api.patch('updatePDPForm/:id', data, { pathParams }).then((response) => response.data),
+  );
+};
+
+interface DuplicatePDPForm {
+  pathParams: {
+    id: string;
+  };
+}
+
+export const useDuplicatePDPForm = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    DuplicatePDPForm
+  >(
+    ({ pathParams }) => api.post('duplicatePDPForm/:id', {}, { pathParams }).then((response) => response.data),
   );
 };

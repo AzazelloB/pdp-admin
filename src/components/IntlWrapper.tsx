@@ -11,10 +11,10 @@ interface IntlWrapperProps {
 }
 
 const IntlWrapper: React.FC<IntlWrapperProps> = ({ children }) => {
-  const locale = 'en';
+  const locale = 'en-GB';
 
   return (
-    <IntlProvider messages={messages[locale]} locale={locale} defaultLocale="en">
+    <IntlProvider messages={messages[locale]} locale={locale} defaultLocale="en-GB">
       {children}
     </IntlProvider>
   );

@@ -3,6 +3,7 @@ import { Box, MenuItem } from '@mui/material';
 
 import { Tab } from 'api/pdpForms';
 import { EVALUATION } from 'constants/evaluation';
+import { useUser } from 'hooks/useUser';
 
 import VerticalTabs from 'ui/VerticalTabs';
 
@@ -10,15 +11,18 @@ import Field from 'components/Form/Field';
 import Select from 'components/Form/FormFields/Select';
 
 interface DynamicTabProps {
+  userId: string;
   tab: Tab;
   tabIndex: number;
 }
 
 const DynamicTab: React.FC<DynamicTabProps> = ({
+  userId,
   tab,
   tabIndex,
 }) => {
   const intl = useIntl();
+  const user = useUser();
 
   return (
     <VerticalTabs.Tab
@@ -50,46 +54,55 @@ const DynamicTab: React.FC<DynamicTabProps> = ({
             alignItems="center"
             columnGap={6}
             rowGap={2}
+            width="100%"
           >
             {category.skills.map((skill, skillIndex) => (
               <>
                 <span>{skill.name}</span>
 
-                <Field
-                  as={Select}
-                  name={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}].userEval`}
-                  value={skill.userEval}
-                  label={intl.formatMessage({
-                    defaultMessage: 'Self evaluation',
-                  })}
-                >
-                  {Object.values(EVALUATION).map((evaluation) => (
-                    <MenuItem
-                      key={evaluation}
-                      value={evaluation}
-                    >
-                      {evaluation}
-                    </MenuItem>
-                  ))}
-                </Field>
+                {userId === user?.uid ? (
+                  <Field
+                    as={Select}
+                    name={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}].userEval`}
+                    value={skill.userEval}
+                    label={intl.formatMessage({
+                      defaultMessage: 'Self evaluation',
+                    })}
+                  >
+                    {Object.values(EVALUATION).map((evaluation) => (
+                      <MenuItem
+                        key={evaluation}
+                        value={evaluation}
+                      >
+                        {evaluation}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                ) : (
+                  <div>{skill.userEval}</div>
+                )}
 
-                <Field
-                  as={Select}
-                  name={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}].supervisorEval`}
-                  value={skill.supervisorEval}
-                  label={intl.formatMessage({
-                    defaultMessage: 'Supervisor evaluation',
-                  })}
-                >
-                  {Object.values(EVALUATION).map((evaluation) => (
-                    <MenuItem
-                      key={evaluation}
-                      value={evaluation}
-                    >
-                      {evaluation}
-                    </MenuItem>
-                  ))}
-                </Field>
+                {userId !== user?.uid ? (
+                  <Field
+                    as={Select}
+                    name={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}].supervisorEval`}
+                    value={skill.supervisorEval}
+                    label={intl.formatMessage({
+                      defaultMessage: 'Supervisor evaluation',
+                    })}
+                  >
+                    {Object.values(EVALUATION).map((evaluation) => (
+                      <MenuItem
+                        key={evaluation}
+                        value={evaluation}
+                      >
+                        {evaluation}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                ) : (
+                  <div>{skill.supervisorEval}</div>
+                )}
 
                 <div>
                   {skill.notes.map((note) => (

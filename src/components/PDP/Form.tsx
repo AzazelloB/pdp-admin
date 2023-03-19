@@ -31,7 +31,11 @@ const Form: React.FC<FormProps> = ({ form, onSumbit }) => {
           <GeneralTab form={form} />
 
           {form.tabs.map((tab, tabIndex) => (
-            <DynamicTab tab={tab} tabIndex={tabIndex} />
+            <DynamicTab
+              userId={form.userId}
+              tab={tab}
+              tabIndex={tabIndex}
+            />
           ))}
 
           {new Date() > new Date(form.to) && (

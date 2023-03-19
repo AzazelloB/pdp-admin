@@ -6,6 +6,7 @@ import PDPFormPage from 'pages/pdp/[:formId]';
 import UsersPage from 'pages/users';
 
 import Layout from './Layout';
+import AuthRoute from './AuthRoute';
 
 const App = () => {
   const routes: RouteObject[] = [
@@ -15,6 +16,7 @@ const App = () => {
     },
     {
       path: '/pdp',
+      element: <AuthRoute />,
       children: [
         { index: true, element: <Layout><PDPPage /></Layout> },
         { path: ':formId', element: <Layout><PDPFormPage /></Layout> },
@@ -22,7 +24,10 @@ const App = () => {
     },
     {
       path: '/users',
-      element: <Layout><UsersPage /></Layout>,
+      element: <AuthRoute />,
+      children: [
+        { index: true, element: <Layout><UsersPage /></Layout> },
+      ],
     },
   ];
 

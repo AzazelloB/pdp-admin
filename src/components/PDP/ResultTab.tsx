@@ -1,7 +1,14 @@
+import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, MenuItem } from '@mui/material';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 
 import { PDPForm, useDuplicatePDPForm, useUpdatePDPForm } from 'api/pdpForms';
 import { GRADE } from 'constants/grade';
@@ -10,7 +17,6 @@ import VerticalTabs from 'ui/VerticalTabs';
 
 import Field from 'components/Form/Field';
 import Textarea from 'components/Form/FormFields/Textarea';
-import Select from 'components/Form/FormFields/Select';
 
 interface ResultTabProps {
   form: PDPForm;
@@ -23,6 +29,8 @@ const ResultTab: React.FC<ResultTabProps> = ({
   const { formId } = useParams();
   const navigate = useNavigate();
 
+  const [level, setLevel] = useState(form.level);
+
   const queryClient = useQueryClient();
   const { mutateAsync: updatePDPForm } = useUpdatePDPForm();
   const { mutateAsync: duplicatePDPForm } = useDuplicatePDPForm();
@@ -32,10 +40,17 @@ const ResultTab: React.FC<ResultTabProps> = ({
       pathParams: {
         id: formId!,
       },
+      data: {
+        newLevel: level,
+      },
     });
 
     queryClient.invalidateQueries('getPDPForms');
     navigate('/pdp');
+  };
+
+  const handleChange = (e: SelectChangeEvent<unknown>) => {
+    setLevel(e.target.value as string);
   };
 
   const handleClose = async () => {
@@ -92,7 +107,9 @@ const ResultTab: React.FC<ResultTabProps> = ({
           <Field
             as={Select}
             name="level"
-            value={form.level}
+            value={level}
+            onChange={handleChange}
+            variant="filled"
             label={intl.formatMessage({
               defaultMessage: 'Grade',
             })}

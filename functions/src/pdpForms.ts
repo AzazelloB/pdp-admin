@@ -114,6 +114,7 @@ export const updatePDPForm = createRequest(async (req, res) => {
 
 export const duplicatePDPForm = createRequest(async (req, res) => {
   const id = req.params[0];
+  const { newGrade: newLevel } = req.body;
 
   const ref = db
     .collection('PDPForms')
@@ -127,12 +128,16 @@ export const duplicatePDPForm = createRequest(async (req, res) => {
 
   const PDPForm = result.data()!;
 
+  if (!canSeeForm(PDPForm, res)) {
+    return res.status(403).send();
+  }
+
   if (PDPForm.archived) {
     return res.status(400).send();
   }
 
-  if (!canSeeForm(PDPForm, res)) {
-    return res.status(403).send();
+  if (!newLevel) {
+    return res.status(400).send();
   }
 
   const newTo: Date = PDPForm.to.toDate();
@@ -140,6 +145,7 @@ export const duplicatePDPForm = createRequest(async (req, res) => {
 
   const newPDPForm = {
     ...PDPForm,
+    level: newLevel,
     feedback: '',
     from: PDPForm.to,
     to: Timestamp.fromDate(newTo),

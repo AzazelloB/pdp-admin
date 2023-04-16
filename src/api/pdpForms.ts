@@ -75,6 +75,9 @@ interface DuplicatePDPForm {
   pathParams: {
     id: string;
   };
+  data: {
+    newLevel: string;
+  }
 }
 
 export const useDuplicatePDPForm = () => {
@@ -83,7 +86,14 @@ export const useDuplicatePDPForm = () => {
     AxiosError,
     DuplicatePDPForm
   >(
-    ({ pathParams }) => api.post('duplicatePDPForm/:id', {}, { pathParams }).then((response) => response.data),
+    ({
+      pathParams,
+      data,
+    }) => api.post(
+      'duplicatePDPForm/:id',
+      data,
+      { pathParams },
+    ).then((response) => response.data),
   );
 };
 

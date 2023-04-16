@@ -76,26 +76,28 @@ const Notes: React.FC<NotesProps> = ({
 
   return (
     <>
-      <Box mb={notes.length ? 2 : 0}>
-        {notes.map((note, noteIndex) => (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <span>{note}</span>
-
-            <IconButton
-              sx={{
-                ml: 4,
-              }}
-              onClick={handleDeleteNote(noteIndex)}
+      {notes.length ? (
+        <Box mb={2}>
+          {notes.map((note, noteIndex) => (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-      </Box>
+              <span>{note}</span>
+
+              <IconButton
+                sx={{
+                  ml: 4,
+                }}
+                onClick={handleDeleteNote(noteIndex)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+        </Box>
+      ) : null}
 
       <Field
         as={InputUI}

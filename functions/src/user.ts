@@ -4,6 +4,15 @@ import { createRequest } from './utils/request';
 import { isAuthenticated, isAuthorized } from './utils/guards';
 import { db } from './utils/bootstrap';
 
+const prepareUsers = (users: UserRecord[]) => {
+  return users.map((user) => ({
+    uid: user.uid,
+    displayName: user.displayName,
+    email: user.email,
+    role: user.customClaims?.role,
+  }));
+};
+
 export const getUserRoleList = createRequest(async () => {
   const authenticatedUsersResult = await getAuth().listUsers();
   const userRoleListResult = await db.collection('userRole').get();
@@ -88,3 +97,23 @@ const assignRole = async (user: UserRecord) => {
     role,
   });
 };
+
+export const getUsers = createRequest(async () => {
+  const authenticatedUsersResult = await getAuth().listUsers();
+
+  return prepareUsers(authenticatedUsersResult.users);
+}, [isAuthenticated]);
+
+export const getUsersByIdentifier = createRequest(async (req, res) => {
+  const { ids } = req.query;
+
+  if (!ids || !Array.isArray(ids)) {
+    return res.status(400).send();
+  }
+
+  const usersResult = await getAuth().getUsers(ids.map((id) => ({
+    uid: id,
+  })));
+
+  return prepareUsers(usersResult.users);
+}, [isAuthenticated]);

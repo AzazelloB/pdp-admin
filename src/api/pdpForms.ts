@@ -86,3 +86,58 @@ export const useDuplicatePDPForm = () => {
     ({ pathParams }) => api.post('duplicatePDPForm/:id', {}, { pathParams }).then((response) => response.data),
   );
 };
+
+interface AddNote {
+  pathParams: {
+    id: string;
+    tabIndex: number;
+    categoryIndex: number;
+    skillIndex: number;
+  };
+  data: {
+    note: string;
+  }
+}
+
+export const useAddNote = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    AddNote
+  >(
+    ({
+      pathParams,
+      data,
+    }) => api.post(
+      'addNote/:id/:tabIndex/:categoryIndex/:skillIndex',
+      data,
+      { pathParams },
+    ).then((response) => response.data),
+  );
+};
+
+interface RemoveNote {
+  pathParams: {
+    id: string;
+    tabIndex: number;
+    categoryIndex: number;
+    skillIndex: number;
+    noteIndex: number;
+  };
+}
+
+export const useRemoveNote = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    RemoveNote
+  >(
+    ({
+      pathParams,
+    }) => api.post(
+      'removeNote/:id/:tabIndex/:categoryIndex/:skillIndex/:noteIndex',
+      {},
+      { pathParams },
+    ).then((response) => response.data),
+  );
+};

@@ -34,6 +34,7 @@ const DynamicTab: React.FC<DynamicTabProps> = ({
     >
       {tab.categories.map((category, categoryIndex) => (
         <Box
+          key={category.name}
           display="flex"
           flexGrow={1}
           p={2}
@@ -108,7 +109,10 @@ const DynamicTab: React.FC<DynamicTabProps> = ({
 
                 <div>
                   <Notes
-                    prefixName={`tabs[${tabIndex}].categories[${categoryIndex}].skills[${skillIndex}]`}
+                    tabIndex={tabIndex}
+                    categoryIndex={categoryIndex}
+                    skillIndex={skillIndex}
+                    notes={skill.notes}
                   />
                 </div>
               </>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFormikContext } from 'formik';
 
 import useDebounce from 'hooks/useDebounce';
@@ -10,24 +10,25 @@ interface AutoSaveProps {
 const AutoSave: React.FC<AutoSaveProps> = ({ debounce }) => {
   const {
     values,
-    initialValues,
     submitForm,
     setSubmitting,
   } = useFormikContext();
 
   const debouncedValues = useDebounce(values, debounce);
+  const prevValues = useRef<unknown | null>(debouncedValues);
 
   useEffect(() => {
-    if (JSON.stringify(initialValues) === JSON.stringify(debouncedValues)) {
+    if (JSON.stringify(prevValues.current) === JSON.stringify(debouncedValues)) {
       return;
     }
 
     (async () => {
       setSubmitting(true);
       await submitForm();
+      prevValues.current = debouncedValues;
       setSubmitting(false);
     })();
-  }, [debouncedValues, initialValues, submitForm, setSubmitting]);
+  }, [debouncedValues, submitForm, setSubmitting]);
 
   return null;
 };

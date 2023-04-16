@@ -23,18 +23,24 @@ const GeneralTab: React.FC<GeneralTabProps> = ({ form }) => {
   const intl = useIntl();
   const { formatDate } = useDate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [{ value: PMValue }, , { setValue: setPMValue }] = useField<string[]>('projectManagerIds');
-  const [{ value: HRValue }, , { setValue: setHRValue }] = useField<string[]>('hrIds');
+  const [{ value: PMValue = [] }, , { setValue: setPMValue }] = useField<string[]>('projectManagerIds');
+  const [{ value: HRValue = [] }, , { setValue: setHRValue }] = useField<string[]>('hrIds');
 
   const { data: usersData } = useUsers();
   const { data: PMData } = useUsersByIdentifier({
     params: {
-      ids: form.projectManagerIds,
+      ids: PMValue,
+    },
+    options: {
+      keepPreviousData: true,
     },
   });
   const { data: HRData } = useUsersByIdentifier({
     params: {
-      ids: form.hrIds,
+      ids: HRValue,
+    },
+    options: {
+      keepPreviousData: true,
     },
   });
 

@@ -1,6 +1,6 @@
 import { api } from 'api';
 import { AxiosError } from 'axios';
-import { useMutation, useQuery } from 'react-query';
+import { QueryObserverOptions, useMutation, useQuery } from 'react-query';
 
 interface UserRoleList {
   email: string;
@@ -61,12 +61,16 @@ interface UsersByIdentifierParams {
 }
 
 interface UsersByIdentifierVariables {
-  params: UsersByIdentifierParams
+  params: UsersByIdentifierParams;
+  options?: QueryObserverOptions<User[]>;
 }
 
-export const useUsersByIdentifier = ({ params }: UsersByIdentifierVariables) => {
+export const useUsersByIdentifier = (
+  { params, options }: UsersByIdentifierVariables,
+) => {
   return useQuery<User[]>(
     ['getUsersByIdentifier', params],
     () => api.get('getUsersByIdentifier', { params }).then((response) => response.data),
+    options,
   );
 };

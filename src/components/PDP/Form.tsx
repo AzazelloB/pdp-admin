@@ -23,7 +23,6 @@ const Form: React.FC<FormProps> = ({ form, onSumbit }) => {
     <Formik
       initialValues={form}
       onSubmit={onSumbit}
-      enableReinitialize
     >
       <FormikForm>
         <AutoSave debounce={500} />

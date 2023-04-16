@@ -32,6 +32,7 @@ const GeneralTab: React.FC<GeneralTabProps> = ({ form }) => {
       ids: PMValue,
     },
     options: {
+      enabled: !!PMValue.length,
       keepPreviousData: true,
     },
   });
@@ -40,6 +41,7 @@ const GeneralTab: React.FC<GeneralTabProps> = ({ form }) => {
       ids: HRValue,
     },
     options: {
+      enabled: !!HRValue.length,
       keepPreviousData: true,
     },
   });
@@ -49,15 +51,27 @@ const GeneralTab: React.FC<GeneralTabProps> = ({ form }) => {
     label: user.email,
   })) || [], [usersData]);
 
-  const PMList = useMemo(() => PMData?.map((user) => ({
-    value: user.uid,
-    label: user.displayName,
-  })) || [], [PMData]);
+  const PMList = useMemo(() => {
+    if (!PMData || PMValue.length === 0) {
+      return [];
+    }
 
-  const HRList = useMemo(() => HRData?.map((user) => ({
-    value: user.uid,
-    label: user.displayName,
-  })) || [], [HRData]);
+    return PMData.map((user) => ({
+      value: user.uid,
+      label: user.displayName,
+    }));
+  }, [PMData, PMValue]);
+
+  const HRList = useMemo(() => {
+    if (!HRData || HRValue.length === 0) {
+      return [];
+    }
+
+    return HRData.map((user) => ({
+      value: user.uid,
+      label: user.displayName,
+    }));
+  }, [HRData, HRValue]);
 
   const handleClick = () => {
     searchParams.set('tab', 'result');

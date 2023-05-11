@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
 
 import { usePDPForm, useUpdatePDPForm } from 'api/pdpForms';
 
 import Form from 'components/PDP/Form';
-import { useQueryClient } from 'react-query';
 
 const PDPFormPage: React.FC = () => {
   const { formId } = useParams();

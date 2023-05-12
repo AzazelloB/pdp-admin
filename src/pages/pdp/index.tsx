@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 import { usePDPForms } from 'api/pdpForms';
 
-import CreateNewModal from 'components/PDPForms/CreateNewModal';
+import AssignModal from 'components/PDPForms/AssignModal';
 import Menu from 'components/PDPForms/Menu';
 
 interface Card {
@@ -73,7 +73,7 @@ const PDPPage: React.FC = () => {
   return (
     <>
       <Box display="flex" justifyContent="flex-end">
-        <CreateNewModal />
+        <AssignModal />
       </Box>
 
       <Container maxWidth="sm">

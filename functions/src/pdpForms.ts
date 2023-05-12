@@ -299,3 +299,64 @@ export const removeNote = createRequest(async (req, res) => {
 
   return updatedPDPForm;
 }, [isAuthenticated]);
+
+export const getTemplates = createRequest(async () => {
+  const ref = await db
+    .collection('templates')
+    .get();
+
+  return ref.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}, [isAuthenticated]);
+
+export const assignTemplate = createRequest(async (req, res) => {
+  const {
+    templateId,
+    userId,
+    from,
+    to,
+  } = req.body;
+
+  if (!templateId || !userId) {
+    return res.status(400).send();
+  }
+
+  const ref = db
+    .collection('templates')
+    .doc(templateId);
+
+  const result = await ref.get();
+
+  if (!result.exists) {
+    return res.status(404).send();
+  }
+
+  const { type, tabs } = result.data()!;
+
+  const defaultTo = new Date();
+  defaultTo.setMonth(defaultTo.getMonth() + REVIEW_PERIOD_IN_MONTH);
+
+  const newPDPForm = {
+    type,
+    tabs,
+    userId,
+    mentorId: res.locals.uid,
+    hrIds: [],
+    projectManagerIds: [],
+    // TODO: get from user
+    level: 'Middle',
+    from: from ? Timestamp.fromDate(new Date(from)) : Timestamp.now(),
+    to: to ? Timestamp.fromDate(new Date(to)) : defaultTo,
+    projectName: '',
+    feedback: '',
+    archived: false,
+  };
+
+  await db
+    .collection('PDPForms')
+    .add(newPDPForm);
+
+  return true;
+}, [isAuthenticated]);

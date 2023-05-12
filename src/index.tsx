@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HashRouter } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import theme from 'ui/theme';
 
@@ -32,11 +34,13 @@ root.render(
 
     <HashRouter>
       <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <IntlWrapper>
-            <App />
-          </IntlWrapper>
-        </QueryClientProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <QueryClientProvider client={queryClient}>
+            <IntlWrapper>
+              <App />
+            </IntlWrapper>
+          </QueryClientProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </HashRouter>
   </React.StrictMode>,

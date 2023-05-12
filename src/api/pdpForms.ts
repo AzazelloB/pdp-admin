@@ -151,3 +151,43 @@ export const useRemoveNote = () => {
     ).then((response) => response.data),
   );
 };
+
+interface Template {
+  id: string;
+  name: string;
+  type: string;
+  tabs: Tab[];
+}
+
+export const useTemplates = () => {
+  return useQuery<Template[]>(
+    ['getTemplates'],
+    () => api.get('getTemplates').then((response) => response.data),
+  );
+};
+
+export interface AssignTemplateData {
+  templateId: string;
+  userId: string;
+  from: string | null;
+  to: string | null;
+}
+
+interface AssignTemplate {
+  data: AssignTemplateData
+}
+
+export const useAssignTemplate = () => {
+  return useMutation<
+    unknown,
+    AxiosError,
+    AssignTemplate
+  >(
+    ({
+      data,
+    }) => api.post(
+      'assignTemplate',
+      data,
+    ).then((response) => response.data),
+  );
+};
